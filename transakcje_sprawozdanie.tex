@@ -37,21 +37,25 @@
 
 \begin{document}
 \justify
-\textbf{cel badania} Izolacja:
+\textbf{Cel badania ->} izolacja:
 \textit{READ\_COMMITED}, cecha:
 \textit{Niezatwierdzony odczyt} \\
-\textbf{wykonane instrukcje: } \\
+\textbf{Wykonane instrukcje: } \\
 Transakcja 1
 \begin{lstlisting}
-COMMIT;
-SET TRANSACTION NAME;
+SET TRANSACTION READ WRITE NAME 'Create_Account';
+UPDATE ACCOUNTS SET ACCOUNT_BALANCE=3000 WHERE ACCOUNT_NUMBER=1110002;
+
+ROLLBACK;
 \end{lstlisting}
 Transakcja 2
 \begin{lstlisting}
-COMMIT;
-SET TRANSACTION NAME;
-\end{lstlisting}
 
-\textbf{otrzymane wyniki: } \\
-\textbf{wnioski} \\
+SET TRANSACTION READ ONLY NAME 'Balances';
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
+\end{lstlisting}
+\textbf{Otrzymane wyniki:} \\
+    Przed rozpoczęciem testów pole o id=1110002 miało wartość 20 000. Transakcja 2, zwróciła  wartość 20 000.\\
+\textbf{Wnioski} \\
+    Baza danych przy domyślnym poziomie izolacji: READ\_COMMITED jest odporna na niezatwierdzony odczyt. \\
 \end{document}
