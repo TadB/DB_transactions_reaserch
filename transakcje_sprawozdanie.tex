@@ -1,0 +1,57 @@
+\documentclass[11pt,oneside, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{polski}
+\usepackage[document]{ragged2e}
+%packages for row counter in table
+%{{{
+\usepackage{array,etoolbox}
+\preto\tabular{\setcounter{magicrownumbers}{0}}
+\newcounter{magicrownumbers}
+\newcommand\rownumber{\stepcounter{magicrownumbers}\arabic{magicrownumbers}}
+%}}}
+%package for code injection
+%{{{
+\usepackage{listings}
+\usepackage{color}
+\lstset{
+    backgroundcolor=\color{white},
+    basicstyle=\footnotesize\sffamily,
+    breaklines=true,
+    frame=single,
+    language=SQL,
+    numbers=left,
+    numbersep=5pt
+}
+%}}}
+\usepackage{geometry}
+    \geometry{
+    a4paper,
+    top = 2mm,
+    left=20mm,
+    right = 20mm,
+    }
+
+\title{}
+\date{}
+
+\begin{document}
+\justify
+\textbf{cel badania} Izolacja:
+\textit{READ\_COMMITED}, cecha:
+\textit{Niezatwierdzony odczyt} \\
+\textbf{wykonane instrukcje: } \\
+Transakcja 1
+\begin{lstlisting}
+COMMIT;
+SET TRANSACTION NAME;
+\end{lstlisting}
+Transakcja 2
+\begin{lstlisting}
+COMMIT;
+SET TRANSACTION NAME;
+\end{lstlisting}
+
+\textbf{otrzymane wyniki: } \\
+\textbf{wnioski} \\
+\end{document}
