@@ -58,6 +58,8 @@ SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
     Przed rozpoczęciem testów pole o id=1110002 miało wartość 20 000. Transakcja 2, zwróciła  wartość 20 000.\\
 \textbf{Wnioski} \\
     Baza danych przy domyślnym poziomie izolacji: READ\_COMMITED jest odporna na niezatwierdzony odczyt. \\
+\newpage
+
 \textbf{Cel badania ->} izolacja:
 \textit{READ\_COMMITED}, cecha:
 \textit{Niepowtarzalny odczyt} \\
@@ -80,7 +82,7 @@ SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
 \textbf{Otrzymane wyniki:} \\
     Przed rozpoczęciem testów pole o id=1110002 miało wartość 20 000. Transakcja 1 oraz 2, zwróciła  wartość 20 000. Transakcja 1 dokonała updatu rekordu id=1110002. Po zatwierdzeniu zmian obie Transakcje zwróciły te same wartości 3000\\
 \textbf{Wnioski } Baza przy poziomie izolacji Read\_Commited nie jest odporna na niepowtarzalny odczyt.\\
-
+\newpage
 \textbf{Cel badania ->} izolacja:
 \textit{READ\_COMMITED}, cecha:
 \textit{Fantomy} \\
@@ -104,6 +106,7 @@ COMMIT;
 \textbf{Otrzymane wyniki:} \\
     Zapytanie SELECT Transakcji 1 oraz 2, zwróciło  wartość 33 000. Transakcja 2 wprowadziła nowy rekord do bazy danych. Po commitcie Transakcji 2, Transakcja 1 dokonała updatu wartości kolumny ACCOUNT\_BALANCE powiększając wszystkie wartości o 50\%. Łącznie z nowo dodanym.
 \textbf{Wnioski } Baza przy poziomie izolacji Read\_Commited nie jest odporna na fantomy.\\
+\newpage
 %-----------------------------------------------------------
 % IZOLACJA SERIALIZABLE
 \textbf{Cel badania ->} izolacja:
@@ -127,6 +130,8 @@ SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
     Przed rozpoczęciem testów pole o id=1110002 miało wartość 4500. Transakcja 2, zwróciła  wartość 4500.\\
 \textbf{Wnioski} \\
     Baza danych przy izolacji: SERIALIZABLE jest odporna na niezatwierdzony odczyt. \\
+\newpage
+
 \textbf{Cel badania ->} izolacja:
 \textit{SERIALIZABLE}, cecha:
 \textit{Niepowtarzalny odczyt} \\
@@ -149,6 +154,7 @@ SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
 \textbf{Otrzymane wyniki:} \\
     Przed rozpoczęciem testów pole o id=1110002 miało wartość 4500. Transakcja 1 oraz 2, zwróciła  wartość 4500. Transakcja 1 dokonała updatu rekordu id=1110002. Po zatwierdzeniu zmian Transakcja 2 zwróciła wartość 4500, natomiast Transakcja 2 zwróciła wartośc 3000\\
 \textbf{Wnioski } Baza przy poziomie izolacji SERIALIZABLE jest odporna na niepowtarzalny odczyt. Update transakcji nr 1 nie został zacommitowany, więc transakcja 2 zwróciła 2 razy tę samą wartość.\\
+\newpage
 
 \textbf{Cel badania ->} izolacja:
 \textit{SERIALIZABLE}, cecha:
