@@ -179,5 +179,29 @@ COMMIT;
 \textbf{Otrzymane wyniki:} \\
     Zapytanie SELECT Transakcji 1 oraz 2, zwróciło  wartość 63 000. Transakcja 2 wprowadziła nowy rekord do bazy danych. Po commitcie Transakcji 2, Transakcja 1 chciała dokonać updatu wartości kolumny ACCOUNT\_BALANCE powiększając wszystkie wartości o 50\%. Baza danych zwróciła error blokując UPDATE.
 \textbf{Wnioski } Baza danych jest odporna na fantomowy odczyt.
+\newpage
 
+\textbf{Cel badania ->} izolacja:
+\textit{READ\_COMMITED + FOR UPDATE}, cecha:
+\textit{Niezatwierdzony odczyt} \\
+\textbf{Wykonane instrukcje: } \\
+Transakcja 1
+\begin{lstlisting}
+SET TRANSACTION READ WRITE NAME 'trans1';
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002 FOR UPDATE;
+UPDATE ACCOUNTS SET ACCOUNT_BALANCE=9000 WHERE ACCOUNT_NUMBER=1110002;
+COMMIT;
+\end{lstlisting}
+Transakcja 2
+\begin{lstlisting}
+SET TRANSACTION READ WRITE NAME 'trans2';
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002 FOR UPDATE;
+
+UPDATE ACCOUNTS SET ACCOUNT_BALANCE=5000 WHERE ACCOUNT_NUMBER=1110002;
+COMMIT;
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
+\end{lstlisting}
+\textbf{Otrzymane wyniki:} \\
+    Transakcja 2 czekała na zakończenie transakcji 1. Transakcja 1 pierwszy odczyt danej był 3000, pierwszy odczyt transakcji 2 był 9000, kolejny SELECT zwrócił wartośc 5000.
+\textbf{Wnioski } Baza danych przy dodaniu do zapytania FOR UPDATE zachowuje się podobnie jak przy poziomie izolacji SERIALIZABLE, gdzie jedna transakcja czeka na wykonanie się poprzedzającej transakcji.
 \end{document}
