@@ -58,4 +58,51 @@ SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
     Przed rozpoczęciem testów pole o id=1110002 miało wartość 20 000. Transakcja 2, zwróciła  wartość 20 000.\\
 \textbf{Wnioski} \\
     Baza danych przy domyślnym poziomie izolacji: READ\_COMMITED jest odporna na niezatwierdzony odczyt. \\
+\textbf{Cel badania ->} izolacja:
+\textit{READ\_COMMITED}, cecha:
+\textit{Niepowtarzalny odczyt} \\
+\textbf{Wykonane instrukcje: } \\
+Transakcja 1
+\begin{lstlisting}
+SET TRANSACTION READ WRITE NAME 'Update_Account';
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
+UPDATE ACCOUNTS SET ACCOUNT_BALANCE=3000 WHERE ACCOUNT_NUMBER=1110002;
+COMMIT;
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
+\end{lstlisting}
+Transakcja 2
+\begin{lstlisting}
+SET TRANSACTION READ WRITE NAME 'Read_Balace';
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
+
+SELECT ACCOUNT_BALANCE FROM ACCOUNTS WHERE ACCOUNT_NUMBER=1110002;
+\end{lstlisting}
+\textbf{Otrzymane wyniki:} \\
+    Przed rozpoczęciem testów pole o id=1110002 miało wartość 20 000. Transakcja 1 oraz 2, zwróciła  wartość 20 000. Transakcja 1 dokonała updatu rekordu id=1110002. Po zatwierdzeniu zmian obie Transakcje zwróciły te same wartości 3000\\
+\textbf{Wnioski } Baza przy poziomie izolacji Read\_Commited nie jest odporna na niepowtarzalny odczyt.\\
+
+\textbf{Cel badania ->} izolacja:
+\textit{READ\_COMMITED}, cecha:
+\textit{Fantomy} \\
+\textbf{Wykonane instrukcje: } \\
+Transakcja 1
+\begin{lstlisting}
+SET TRANSACTION READ WRITE NAME 'Update_Account';
+SELECT SUM(ACCOUNT_BALANCE) FROM ACCOUNTS;
+
+
+UPDATE ACCOUNT SET ACCOUNT_BALANCE = ACCOUNT_BALANCE*1.5;
+COMMIT;
+\end{lstlisting}
+Transakcja 2
+\begin{lstlisting}
+SET TRANSACTION READ WRITE NAME 'Update_Account';
+SELECT SUM(ACCOUNT_BALANCE) FROM ACCOUNTS;
+INSERT INTO ACCOUNTS (ACCOUNT_NUMBER, ACCOUNT_BALANCE) VALUES (SEQ_ACCOUNT_NUMBER.NEXTVAL, 10000);
+COMMIT;
+\end{lstlisting}
+\textbf{Otrzymane wyniki:} \\
+    Zapytanie SELECT Transakcji 1 oraz 2, zwróciło  wartość 33 000. Transakcja 2 wprowadziła nowy rekord do bazy danych. Po commitcie Transakcji 2, Transakcja 1 dokonała updatu wartości kolumny ACCOUNT_BALANCE powiększając wszystkie wartości o 50\%. Łącznie z nowo dodanym.
+\textbf{Wnioski } Baza przy poziomie izolacji Read\_Commited nie jest odporna na fantomy.\\
+
 \end{document}
